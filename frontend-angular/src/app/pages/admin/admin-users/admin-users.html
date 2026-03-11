@@ -1,0 +1,105 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Users Management</h1>
+            <p class="page-subtitle">Manage all registered users on the platform</p>
+        </div>
+        <div class="header-stats">
+            <span class="header-stat">Total: <strong>{{ users.length }}</strong> users</span>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-wrap">
+            <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
+                placeholder="Search by username or email..." class="search-input" />
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading users...</p>
+    </div>
+
+    <!-- Users Table -->
+    <div *ngIf="!isLoading" class="card">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="text-left">User</th>
+                        <th class="text-left">Email</th>
+                        <th class="text-center">Posts</th>
+                        <th class="text-center">Role</th>
+                        <th class="text-center">Joined</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of paginatedUsers">
+                        <td>
+                            <div class="user-cell">
+                                <img [src]="user.avatar || 'https://ui-avatars.com/api/?name=' + user.username + '&background=1a1a2e&color=fff'"
+                                    class="avatar" />
+                                <div class="user-info">
+                                    <span class="user-name">{{ user.username }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-muted">{{ user.email }}</td>
+                        <td class="text-center">
+                            <span class="post-badge">{{ user.posts?.length || 0 }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span *ngIf="user.isAdmin" class="role-badge role-admin">Admin</span>
+                            <span *ngIf="!user.isAdmin" class="role-badge role-user">User</span>
+                        </td>
+                        <td class="text-center text-muted text-sm">{{ user.createdAt | date:'mediumDate' }}</td>
+                        <td class="text-right">
+                            <button *ngIf="!user.isAdmin" (click)="deleteUser(user._id, user.username)"
+                                class="action-btn delete-btn" title="Delete User">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                            <span *ngIf="user.isAdmin" class="protected-label">Protected</span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filteredUsers.length === 0">
+                        <td colspan="6" class="empty-row">
+                            <div class="empty-state">
+                                <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                <p>No users found</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="totalPages > 1" class="pagination">
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="page-btn">
+                ← Prev
+            </button>
+            <div class="page-numbers">
+                <button *ngFor="let p of pages" (click)="goToPage(p)"
+                    [class.active]="p === currentPage" class="page-num">{{ p }}</button>
+            </div>
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" class="page-btn">
+                Next →
+            </button>
+        </div>
+    </div>
+</div>

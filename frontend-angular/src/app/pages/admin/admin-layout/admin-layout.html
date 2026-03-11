@@ -1,0 +1,95 @@
+<div class="admin-shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" [class.sidebar-open]="isMobileMenuOpen">
+        <div class="sidebar-header">
+            <span class="sidebar-brand">ADMIN PORTAL</span>
+            <button class="sidebar-close" (click)="isMobileMenuOpen = false">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a routerLink="/admin/dashboard" routerLinkActive="nav-active" (click)="isMobileMenuOpen = false"
+                class="nav-link">
+                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                Dashboard
+            </a>
+
+            <a routerLink="/admin/users" routerLinkActive="nav-active" (click)="isMobileMenuOpen = false"
+                class="nav-link">
+                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Users
+            </a>
+
+            <a routerLink="/admin/blogs" routerLinkActive="nav-active" (click)="isMobileMenuOpen = false"
+                class="nav-link">
+                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+                Blogs
+            </a>
+
+            <a routerLink="/admin/comments" routerLinkActive="nav-active" (click)="isMobileMenuOpen = false"
+                class="nav-link">
+                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                Comments
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-info" *ngIf="adminUser">
+                <div class="admin-avatar-wrap">
+                    <img [src]="adminUser.avatar || 'https://ui-avatars.com/api/?name=Admin&background=dc2626&color=fff'"
+                        class="admin-avatar" />
+                </div>
+                <div class="admin-details">
+                    <span class="admin-name">{{ adminUser.username }}</span>
+                    <span class="admin-role">Administrator</span>
+                </div>
+            </div>
+            <button (click)="logout()" class="logout-btn">
+                <svg class="logout-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Overlay for mobile -->
+    <div class="sidebar-overlay" *ngIf="isMobileMenuOpen" (click)="isMobileMenuOpen = false"></div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Top Nav -->
+        <header class="top-nav">
+            <button class="hamburger" (click)="isMobileMenuOpen = true">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <span class="top-brand">ADMIN PORTAL</span>
+        </header>
+
+        <!-- Router Outlet for Child Routes -->
+        <main class="page-content">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>

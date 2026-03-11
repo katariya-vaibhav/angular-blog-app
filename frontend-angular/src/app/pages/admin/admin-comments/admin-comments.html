@@ -1,0 +1,125 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Comment Moderation</h1>
+            <p class="page-subtitle">Moderate comments across your platform with blog-level insights</p>
+        </div>
+        <div class="header-stats">
+            <span class="header-stat">Total Comments: <strong>{{ comments.length }}</strong></span>
+            <span class="header-stat">Blogs with Comments: <strong>{{ blogStats.length }}</strong></span>
+        </div>
+    </div>
+
+    <!-- Blogs Overview (Stat Cards) -->
+    <div class="blogs-stats-grid" *ngIf="blogStats.length > 0">
+        <div *ngFor="let stat of blogStats.slice(0, 4)" 
+             class="blog-stat-card" 
+             [class.active]="selectedBlogId === stat.blog._id"
+             (click)="filterByBlog(stat.blog._id)">
+            <div class="blog-stat-header">
+                <span class="blog-stat-title">{{ stat.blog.title }}</span>
+                <span class="blog-stat-count">{{ stat.commentCount }}</span>
+            </div>
+            <div class="blog-stat-footer">
+                <span class="blog-stat-label">comments</span>
+                <span class="blog-stat-date">{{ stat.lastCommentedAt | date:'shortDate' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-wrap">
+            <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
+                placeholder="Search by content, user, or blog title..." class="search-input" />
+        </div>
+        <div class="filter-actions">
+            <button *ngIf="searchTerm || selectedBlogId" (click)="searchTerm = ''; selectedBlogId = ''; applyFilter()" class="clear-btn">
+                Clear Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading comments...</p>
+    </div>
+
+    <!-- Comments Table -->
+    <div *ngIf="!isLoading" class="card">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="text-left">Comment</th>
+                        <th class="text-left">Author</th>
+                        <th class="text-left">Blog</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let comment of paginatedComments">
+                        <td>
+                            <div class="comment-content">
+                                {{ comment.content | slice:0:80 }}{{ comment.content?.length > 80 ? '...' : '' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="user-cell">
+                                <img [src]="comment.owner?.avatar || 'https://ui-avatars.com/api/?name=U&background=1a1a2e&color=fff'"
+                                    class="avatar-sm" />
+                                <span class="text-light">{{ comment.owner?.username || 'Unknown' }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="blog-ref" *ngIf="comment.blogId?.title">{{ comment.blogId.title | slice:0:40 }}{{ comment.blogId.title?.length > 40 ? '...' : '' }}</span>
+                            <span class="text-muted" *ngIf="!comment.blogId?.title">Deleted blog</span>
+                        </td>
+                        <td class="text-center text-muted text-sm">{{ comment.createdAt | date:'mediumDate' }}</td>
+                        <td class="text-right">
+                            <button (click)="deleteComment(comment._id)" class="action-btn delete-btn"
+                                title="Delete Comment">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filteredComments.length === 0">
+                        <td colspan="5" class="empty-row">
+                            <div class="empty-state">
+                                <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                <p>No comments found</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="totalPages > 1" class="pagination">
+            <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="page-btn">
+                ← Prev
+            </button>
+            <div class="page-numbers">
+                <button *ngFor="let p of pages" (click)="goToPage(p)"
+                    [class.active]="p === currentPage" class="page-num">{{ p }}</button>
+            </div>
+            <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" class="page-btn">
+                Next →
+            </button>
+        </div>
+    </div>
+</div>

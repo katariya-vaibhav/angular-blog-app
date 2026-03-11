@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
       return;
     }
     
-    this.http.get<any>(`/api/v2/Blog/owner-blog/${this.search}`).subscribe({
+    this.http.get<any>(`/api/v2/Blog/owner/${this.search}`).subscribe({
       next: (res) => {
         this.data = res;
         this.search = '';

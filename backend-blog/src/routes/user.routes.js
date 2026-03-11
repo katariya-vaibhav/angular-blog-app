@@ -6,12 +6,17 @@ import {
   getUserById,
   // google,
   loginUser,
+  adminLoginUser,
   logoutUser,
   registerUser,
   updateCurrentPasswrod,
   updateUserDetails,
+  getAllUsersForAdmin,
+  deleteUser,
+  getAdminStats,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
+import { verifyAdmin } from "../middleware/admin.middleware.js";
 import { upload } from "../middleware/multer.middlerware.js";
 
 const router = Router();
@@ -43,4 +48,11 @@ router.route("/change-user-details").put(
 );
 router.route("/get-user/:id").get(verifyJWT, getUserById);
 router.route("/get-authors").get(getAuthors);
+
+// Admin Routes
+router.route("/admin/login").post(adminLoginUser);
+router.route("/admin/users").get(verifyJWT, verifyAdmin, getAllUsersForAdmin);
+router.route("/admin/users/:id").delete(verifyJWT, verifyAdmin, deleteUser);
+router.route("/admin/stats").get(verifyJWT, verifyAdmin, getAdminStats);
+
 export default router;

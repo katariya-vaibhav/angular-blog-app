@@ -1,91 +1,99 @@
-<section class="space-y-8">
-  <!-- Hero -->
-  <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-    <div class="space-y-3">
-      <p class="text-xs font-medium uppercase tracking-[0.2em] text-blue-400">
-        Welcome to BlogSphere
-      </p>
-      <h1 class="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-white">
-        Discover stories, ideas & experiences
-      </h1>
-      <p class="text-sm md:text-base text-zinc-400 max-w-xl">
-        Read from the community or share your own blog posts. Search by author and explore fresh perspectives every day.
-      </p>
-      <div class="flex flex-wrap gap-3 pt-2">
-        <a routerLink="/create"
-           class="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-500 transition">
-          Write a blog
-        </a>
-        <a routerLink="/profile"
-           class="inline-flex items-center justify-center rounded-full border border-zinc-700 px-5 py-2 text-sm text-zinc-200 hover:bg-zinc-900 hover:border-zinc-500 transition">
-          View my profile
-        </a>
-      </div>
-    </div>
+<section class="pb-20 max-w-7xl mx-auto">
+    <!-- Hero Section -->
+    <div class="relative pt-10 pb-20 overflow-hidden">
+        <!-- Background Accents
+        <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-full h-[500px] bg-blue-600/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-full h-[400px] bg-red-600/10 rounded-full blur-[100px]"></div> -->
 
-    <div class="hidden md:block">
-      <div class="relative">
-        <div class="h-32 w-32 rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-400 blur-2xl opacity-40"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="rounded-3xl border border-zinc-800 bg-zinc-900/80 px-6 py-4 shadow-lg shadow-blue-950/40">
-            <p class="text-xs font-medium text-blue-300 mb-1">
-              Live
-            </p>
-            <p class="text-sm text-zinc-100">
-              {{ displayProduct.length || 0 }} blogs published
-            </p>
-          </div>
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div class="flex-1 space-y-6 text-center md:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    </span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-blue-400">Welcome to BlogSphere</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1]">
+                    Where <span class="text-blue-500">Stories</span> <br class="hidden lg:block"> Find Their Voice
+                </h1>
+                
+                <p class="text-lg text-zinc-400 max-w-xl mx-auto md:mx-0 leading-relaxed">
+                    A premium space for creators and thinkers. Explore thousands of hand-crafted perspectives from the world's most creative community.
+                </p>
+                
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
+                    <a routerLink="/create" class="px-8 py-4 bg-white text-black font-bold rounded-2xl hover:bg-blue-500 hover:text-white transition-all duration-300 shadow-xl shadow-white/5">
+                        Start Writing
+                    </a>
+                    <a routerLink="/profile" class="px-8 py-4 glass text-white font-bold rounded-2xl hover:bg-white/5 transition-all duration-300">
+                        View Profile
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Search by author -->
-  <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-    <div class="flex-1 flex rounded-full bg-zinc-900 border border-zinc-800/80 focus-within:border-blue-500/60 focus-within:ring-1 focus-within:ring-blue-500/60 transition">
-      <span class="flex items-center pl-4 pr-2 text-zinc-500">
-        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="18" width="18"
-             xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z">
-          </path>
-        </svg>
-      </span>
-      <input
-        class="flex-1 bg-transparent text-sm md:text-base text-zinc-200 placeholder:text-zinc-500 px-1 pr-4 py-2 outline-none"
-        type="text"
-        name="ownerblog"
-        [(ngModel)]="search"
-        placeholder="Search blogs by author username..."
-      />
+    <!-- Enhanced Search Section -->
+    <div class="max-w-3xl mx-auto -mt-10 relative z-20">
+        <div class="glass p-2 rounded-3xl flex items-center shadow-2xl">
+            <div class="flex-1 flex items-center gap-4 px-4">
+                <svg class="w-5 h-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                    class="w-full bg-transparent border-none outline-none text-white placeholder:text-zinc-500 py-4 font-medium"
+                    type="text"
+                    [(ngModel)]="search"
+                    (keyup.enter)="ownerBlogSearchHandler()"
+                    placeholder="Search by author username..."
+                />
+            </div>
+            <button
+                (click)="ownerBlogSearchHandler()"
+                class="bg-blue-600 text-white font-bold h-12 px-8 rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
+            >
+                Search
+            </button>
+        </div>
     </div>
-    <button
-      (click)="ownerBlogSearchHandler()"
-      class="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-500 transition"
-    >
-      Search
-    </button>
-  </div>
 
-  <!-- Blog grid -->
-  @if (displayProduct.length !== 0) {
-    <div class="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 pt-4">
-      @for (item of displayProduct; track item._id) {
-        <app-blog-card [blog]="item"></app-blog-card>
-      }
+    <!-- Blog Grid -->
+    <div class="space-y-8 pt-10">
+        <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-white/90">Featured Publications</h2>
+            <div class="h-px flex-1 mx-8 bg-zinc-800/50 hidden md:block"></div>
+            <div class="flex gap-2">
+                <button class="w-10 h-10 rounded-xl glass border-none flex items-center justify-center text-zinc-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        @if (displayProduct.length !== 0) {
+            <div class="grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+                @for (item of displayProduct; track item._id) {
+                    <app-blog-card [blog]="item"></app-blog-card>
+                }
+            </div>
+        } @else {
+            <div class="py-32 flex flex-col items-center justify-center text-center glass rounded-[3rem]">
+                <div class="w-20 h-20 rounded-full bg-zinc-800/50 flex items-center justify-center mb-6">
+                    <svg class="w-10 h-10 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-3">No blogs found</h2>
+                <p class="text-zinc-400 max-w-sm mb-8">
+                    We couldn't find any stories matching your search. Try a different author or explore our recent posts.
+                </p>
+                <a routerLink="/create" class="px-8 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20">
+                    Create Your First Blog
+                </a>
+            </div>
+        }
     </div>
-  } @else {
-    <div class="py-20 flex flex-col items-center justify-center text-center">
-      <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 mb-2">
-        No blogs found
-      </h2>
-      <p class="text-sm md:text-base text-zinc-400 mb-4">
-        Try searching with a different author or create your first blog post.
-      </p>
-      <a routerLink="/create"
-         class="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-500 transition">
-        Create your first blog
-      </a>
-    </div>
-  }
 </section>

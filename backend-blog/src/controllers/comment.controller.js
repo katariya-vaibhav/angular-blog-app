@@ -150,4 +150,31 @@ const deleteComment = asyncHandler(async (req, res) => {
   }
 });
 
-export { createComment, getComment, updateComment, deleteComment };
+const getAllComments = asyncHandler(async (req, res) => {
+  try {
+    const comments = await Comment.find()
+      .populate({ path: "owner", select: "username avatar _id" })
+      .populate({ path: "blogId", select: "title _id" })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ comments, totalComments: comments.length });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch comments" });
+  }
+});
+
+const adminDeleteComment = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+  try {
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+    await Comment.findByIdAndDelete(commentId);
+    res.status(200).json({ message: "Comment deleted successfully by admin" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete comment" });
+  }
+});
+
+export { createComment, getComment, updateComment, deleteComment, getAllComments, adminDeleteComment };
