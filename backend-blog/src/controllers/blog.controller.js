@@ -1,5 +1,6 @@
 import { Blog } from "../model/blog.model.js";
 import { User } from "../model/user.model.js";
+import { Comment } from "../model/comment.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -197,6 +198,9 @@ const deleteBlog = asyncHandler(async (req, res) => {
   }
 
   try {
+    // Delete all comments associated with this blog
+    await Comment.deleteMany({ blogId: id });
+
     // Delete the blog from the database
     await Blog.findByIdAndDelete(id);
 
@@ -214,6 +218,73 @@ const deleteBlog = asyncHandler(async (req, res) => {
   }
 });
 
+const adminDeleteBlog = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const blog = await Blog.findById(id);
+  if (!blog) {
+    return res.status(404).json({ error: "Blog not found" });
+  }
+
+  try {
+    if (blog.image) {
+      const imagePublicId = blog.image.split("/").pop().split(".")[0];
+      await deleteFileOnCloudinary(imagePublicId);
+    }
+
+    // Delete all comments associated with this blog
+    await Comment.deleteMany({ blogId: id });
+
+    await User.findByIdAndUpdate(blog.owner, { $pull: { posts: id } });
+    await Blog.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Blog deleted successfully by admin" });
+  } catch (error) {
+    console.error("Admin delete blog error:", error);
+    res.status(500).json({ error: "Error deleting blog" });
+  }
+});
+
+const getBlogsWithCommentStats = asyncHandler(async (req, res) => {
+  try {
+    const { Comment } = await import('../model/comment.model.js');
+    
+    // Aggregate comments to count by blogId
+    const stats = await Comment.aggregate([
+      {
+        $group: {
+          _id: "$blogId",
+          commentCount: { $sum: 1 },
+          lastCommentedAt: { $max: "$createdAt" }
+        }
+      },
+      {
+        $lookup: {
+          from: "blogs",
+          localField: "_id",
+          foreignField: "_id",
+          as: "blog"
+        }
+      },
+      { $unwind: "$blog" },
+      {
+        $project: {
+          _id: 1,
+          commentCount: 1,
+          lastCommentedAt: 1,
+          "blog.title": 1,
+          "blog._id": 1
+        }
+      },
+      { $sort: { commentCount: -1 } }
+    ]);
+
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error("Aggregation error:", error);
+    res.status(500).json({ error: "Failed to fetch comment stats" });
+  }
+});
+
 export {
   uploadBlog,
   getAllBlog,
@@ -221,4 +292,6 @@ export {
   updateBlog,
   deleteBlog,
   getBlogById,
+  adminDeleteBlog,
+  getBlogsWithCommentStats,
 };

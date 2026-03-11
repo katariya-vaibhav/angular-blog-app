@@ -13,7 +13,7 @@ export class BlogService {
   constructor(private http: HttpClient) { }
 
   getAllBlogs(): Observable<any> {
-    return this.http.get<any>('/api/v2/Blog/getAllBlog').pipe(
+    return this.http.get<any>('/api/v2/Blog/all').pipe(
       tap(res => {
         if (Array.isArray(res)) {
           this.blogs.set(res);
@@ -23,7 +23,7 @@ export class BlogService {
   }
 
   getBlog(id: string): Observable<any> {
-    return this.http.get<any>(`/api/v2/Blog/get-blog/${id}`);
+    return this.http.get<any>(`/api/v2/Blog/get/${id}`);
   }
 
   createBlog(formData: FormData): Observable<any> {

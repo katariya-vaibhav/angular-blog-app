@@ -14,9 +14,9 @@ import { CommonModule } from '@angular/common';
 })
 export class Header {
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private blogService: BlogService,
-    private userService: UserService,
+    public userService: UserService,
     private router: Router
   ) {}
 

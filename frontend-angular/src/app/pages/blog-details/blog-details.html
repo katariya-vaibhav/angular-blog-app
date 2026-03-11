@@ -1,86 +1,102 @@
-<div class="min-h-screen lg:mx-[15rem] my-10 text-white">
+<div class="min-h-screen max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pb-20">
     @if (!loading) {
-    <div class="min-h-screen w-full">
-        <div class="my-5 flex items-center justify-between">
-            <a [routerLink]="['/profile', data?.owner?._id]">
-                <div class="flex items-center gap-3">
-                    <img class="h-10 w-10 border-[1px] border-zinc-700 p-1 rounded-full object-cover"
-                        [src]="data?.owner?.avatar" [alt]="data?.owner?._id" />
-                    <p>{{ data?.owner?.username }}</p>
+        <!-- Article Header -->
+        <div class="relative h-[60vh] md:h-[75vh] w-full mx-auto overflow-hidden">
+            <img class="absolute inset-0 w-full h-full object-cover" [src]="data?.image" [alt]="data?.title" />
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
+            
+            <div class="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:p-20">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <span class="inline-flex px-4 py-1.5 rounded-full glass text-xs font-bold uppercase tracking-widest text-blue-400">
+                        {{ data?.category }}
+                    </span>
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] break-words">
+                        {{ data?.title }}
+                    </h1>
+                    
+                    <div class="flex items-center justify-between flex-wrap gap-6 pt-4 italic border-t border-white/10">
+                        <a [routerLink]="['/profile', data?.owner?._id]" class="group flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full border-2 border-white/20 overflow-hidden group-hover:border-blue-500 transition-colors">
+                                <img class="w-full h-full object-cover" [src]="data?.owner?.avatar" [alt]="data?.owner?.username" />
+                            </div>
+                            <div>
+                                <p class="text-white font-bold group-hover:text-blue-400 transition-colors text-lg">@{{ data?.owner?.username }}</p>
+                                <p class="text-zinc-400 text-sm font-medium">Published on {{ data?.createdAt | date:'longDate' }}</p>
+                            </div>
+                        </a>
+                        
+                        <div class="flex items-center gap-3">
+                            <span class="px-4 py-2 glass rounded-2xl text-zinc-300 text-sm font-bold flex items-center gap-2">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                8 min read
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </a>
-            <p class="text-end text-sm text-zinc-400">
-                {{ data?.createdAt | date:'medium' }}
-            </p>
-        </div>
-
-        <div class="h-[15rem] md:h-[30rem]">
-            <img class="p-2 object-cover rounded-3xl h-[100%] w-[100%]" [src]="data?.image" [alt]="data?._id" />
-        </div>
-
-        <div class="p-2">
-            @if (authService.currentUser()?._id === data?.owner?._id) {
-            <div class="flex justify-end gap-3">
-                <button
-                    class="py-1 text-sm px-3 border-[1px] font-semibold text-red-500 hover:text-white hover:bg-red-600 hover:border-none rounded-full"
-                    (click)="deleteHandler()">
-                    DELETE
-                </button>
-                <button class="py-1 text-sm px-3 border-[1px] font-semibold rounded-full" (click)="editMode = true">
-                    UPDATE
-                </button>
             </div>
+        </div>
+
+        <!-- Article Content -->
+        <article class="max-w-4xl mx-auto px-6 py-16 md:py-24">
+            @if (authService.currentUser()?._id === data?.owner?._id) {
+                <div class="flex justify-end gap-3 mb-12">
+                    <button class="px-6 py-2 rounded-xl glass border-none text-red-400 font-bold hover:bg-red-400/10 transition-all" (click)="deleteHandler()">
+                        Delete Post
+                    </button>
+                    <button class="px-6 py-2 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20" (click)="editMode = true">
+                        Edit Article
+                    </button>
+                </div>
             }
 
             @if (editMode) {
-            <form (ngSubmit)="updateHandler()" class="my-4">
-                <!-- <div class="mb-4">
-                    <label class="block text-sm font-medium">Cover image (optional)</label>
-                    <input type="file" (change)="handleFileChange($event)" accept="image/*"
-                        class="w-full my-2 outline-none p-2 border border-zinc-700 rounded bg-zinc-900 text-white" />
-                    @if (imageFile) {
-                    <p class="text-xs text-zinc-400">Selected: {{ imageFile.name }}</p>
-                    }
-                </div> -->
-                <div>
-                    <label class="block text-sm font-medium">Title</label>
-                    <input type="text" [(ngModel)]="titleInput" name="title"
-                        class="w-full my-2 outline-none p-2 border-none rounded bg-zinc-800 text-white" />
+                <!-- Edit Form remains similar in functionality but with premium styling -->
+                <div class="glass p-8 md:p-12 rounded-[2.5rem] shadow-2xl">
+                    <h2 class="text-2xl font-bold mb-8 text-white">Update Your Story</h2>
+                    <form (ngSubmit)="updateHandler()" class="space-y-8">
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-zinc-500 uppercase tracking-widest px-2">Title</label>
+                            <input type="text" [(ngModel)]="titleInput" name="title" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-lg text-white focus:border-blue-500/50 outline-none transition-all" />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-zinc-500 uppercase tracking-widest px-2">Category</label>
+                            <input type="text" [(ngModel)]="categoryInput" name="category" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-lg text-white focus:border-blue-500/50 outline-none transition-all" />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-zinc-500 uppercase tracking-widest px-2">Content</label>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 min-h-[400px]">
+                                <quill-editor [(ngModel)]="descriptionInput" name="description" [styles]="{height: '350px'}" class="text-white ql-premium"></quill-editor>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-3 pt-4">
+                            <button type="button" class="px-8 py-3 rounded-2xl glass font-bold text-white transition-all" (click)="editMode = false">Cancel</button>
+                            <button type="submit" class="px-10 py-3 rounded-2xl bg-green-600 text-white font-bold hover:bg-green-700 transition-all shadow-lg shadow-green-600/20">Save Changes</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="mt-4">
-                    <label class="block text-sm font-medium">Category</label>
-                    <input type="text" [(ngModel)]="categoryInput" name="category"
-                        class="w-full my-2 outline-none p-2 border-none rounded bg-zinc-800 text-white" />
-                </div>
-                <div class="mt-4">
-                    <label class="block text-sm font-medium">Description</label>
-                    <quill-editor [(ngModel)]="descriptionInput" name="description" [styles]="{height: '300px'}"
-                        class="block w-full text-white"></quill-editor>
-                </div>
-                <div class="flex justify-end gap-3 mt-4">
-                    <button type="button" class="py-1 text-sm px-3 border-[1px] font-semibold rounded-full"
-                        (click)="editMode = false">
-                        Cancel
-                    </button>
-                    <button type="submit"
-                        class="py-1 text-sm px-3 border-[1px] font-semibold text-green-500 hover:text-white hover:bg-green-600 hover:border-none rounded-full">
-                        Save
-                    </button>
-                </div>
-            </form>
             } @else {
-            <h2 class="text-2xl my-2 font-semibold">{{ data?.title }}</h2>
-            <div class="my-4 text-zinc-300 w-full text-wrap overflow-x-auto" [innerHTML]="data?.description"></div>
+                <div class="prose prose-invert prose-base md:prose-lg lg:prose-xl max-w-none text-zinc-300 leading-[1.8] ql-content overflow-x-auto" [innerHTML]="data?.description"></div>
             }
-        </div>
 
-        <div class="py-5 border-t-[1px] border-zinc-700">
-            @if (id) {
-            <app-comment [blogId]="id"></app-comment>
-            }
-        </div>
-    </div>
+            <!-- Comments Section -->
+            <div class="mt-32 pt-20 border-t border-white/5">
+                <div class="flex items-center gap-4 mb-12">
+                    <h2 class="text-3xl font-bold text-white">Discussion</h2>
+                    <div class="h-px flex-1 bg-white/5"></div>
+                </div>
+                @if (id) {
+                    <app-comment [blogId]="id" class="block bg-zinc-900/40 p-2 rounded-[2rem] border border-white/5"></app-comment>
+                }
+            </div>
+        </article>
     } @else {
-    <h1 class="flex justify-center items-center h-screen">Loading.....</h1>
+        <div class="min-h-screen flex items-center justify-center">
+            <div class="flex flex-col items-center gap-4">
+                <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-zinc-500 font-bold tracking-widest uppercase text-xs">Loading Article...</p>
+            </div>
+        </div>
     }
 </div>

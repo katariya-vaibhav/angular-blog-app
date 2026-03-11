@@ -1,6 +1,8 @@
 import { Error } from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../model/user.model.js";
+import { Blog } from "../model/blog.model.js";
+import { Comment } from "../model/comment.model.js";
 
 import {
   deleteFileOnCloudinary,
@@ -92,6 +94,45 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const currentDate = Date.now();
 
+  const _option = {
+    path: "/",
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 365,
+    expires: new Date(currentDate + 60 * 60 * 24 * 365 * 1000),
+  };
+  res.status(200).cookie("token", token, _option).json({
+    message: "user logged in successfully",
+    loggedInUser,
+    token
+  });
+});
+
+const adminLoginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "email and password are required" });
+  }
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ error: "admin not found" });
+  }
+
+  // Ensure user is an admin
+  if (!user.isAdmin) {
+    return res.status(403).json({ error: "Access denied. Not an admin." });
+  }
+
+  const isPasswordCorrect = await user.isPasswordCorrect(password);
+  if (!isPasswordCorrect) {
+    return res.status(400).json({ error: "password is incorrect" });
+  }
+
+  const { token } = await generateToken(user._id);
+  const loggedInAdmin = await User.findById(user._id).select("-password");
+
+  const currentDate = Date.now();
   const option = {
     path: "/",
     httpOnly: true,
@@ -100,15 +141,17 @@ const loginUser = asyncHandler(async (req, res) => {
     maxAge: 60 * 60 * 24 * 365,
     expires: new Date(currentDate + 60 * 60 * 24 * 365 * 1000),
   };
+
   res.status(200).cookie("token", token, option).json({
-    message: "user logged in successfully",
-    loggedInUser,
+    message: "Admin logged in successfully",
+    admin: loggedInAdmin,
+    token
   });
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
   const currentDate = Date.now();
-  
+
   const option = {
     path: "/",
     httpOnly: true,
@@ -290,6 +333,76 @@ const getAuthors = asyncHandler(async (req, res) => {
   }
 });
 
+const getAllUsersForAdmin = asyncHandler(async (req, res) => {
+  try {
+    const users = await User.find().select("-password").sort({ createdAt: -1 });
+    res.status(200).json({
+      message: "Users fetched successfully",
+      totalUsers: users.length,
+      users,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Optional: Prevent deleting self
+    if (req.user._id.toString() === id) {
+      return res.status(400).json({ error: "Admin cannot delete themselves." });
+    }
+
+    const userToDelete = await User.findById(id);
+    if (!userToDelete) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Attempt to delete user's avatar if stored on cloudinary
+    if (userToDelete.avatar) {
+      try {
+        const avatarPublicId = userToDelete.avatar.split("/").pop().split(".")[0];
+        await deleteFileOnCloudinary(avatarPublicId);
+      } catch (err) {
+        console.log("Failed to delete avatar from cloudinary", err);
+      }
+    }
+
+    // Delete user's blog posts (cascade delete)
+    // Find blogs to delete their cloud images and comments
+    const userBlogs = await Blog.find({ owner: id });
+    for (let blog of userBlogs) {
+      // Delete comments associated with this blog
+      await Comment.deleteMany({ blogId: blog._id });
+
+      if (blog.image) {
+        try {
+          const imagePublicId = blog.image.split("/").pop().split(".")[0];
+          await deleteFileOnCloudinary(imagePublicId);
+        } catch (err) {
+          console.log("Failed to delete blog image", err);
+        }
+      }
+    }
+
+    // Delete all blogs owned by this user
+    await Blog.deleteMany({ owner: id });
+
+    // Delete all comments written by this user
+    await Comment.deleteMany({ owner: id });
+
+    // Delete the actual user
+    await User.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "User and all associated data deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete user" });
+  }
+});
+
 // const google = asyncHandler(async (req, res) => {
 //   const { username, email, avatar } = req.body;
 //   try {
@@ -343,15 +456,32 @@ const getAuthors = asyncHandler(async (req, res) => {
 //   }
 // });
 
+const getAdminStats = asyncHandler(async (req, res) => {
+  try {
+    const [totalUsers, totalBlogs, totalComments] = await Promise.all([
+      User.countDocuments(),
+      Blog.countDocuments(),
+      Comment.countDocuments(),
+    ]);
+
+    res.status(200).json({ totalUsers, totalBlogs, totalComments });
+  } catch (error) {
+    console.error("Failed to fetch admin stats:", error);
+    res.status(500).json({ error: "Failed to fetch admin stats" });
+  }
+});
+
 export {
   registerUser,
   loginUser,
+  adminLoginUser,
   logoutUser,
-  // genRefreshToken,
   getCurrentUser,
   updateCurrentPasswrod,
   updateUserDetails,
   getUserById,
   getAuthors,
-  // google,
+  getAllUsersForAdmin,
+  deleteUser,
+  getAdminStats,
 };
