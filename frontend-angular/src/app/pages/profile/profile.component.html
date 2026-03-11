@@ -1,0 +1,96 @@
+<div class="min-h-screen w-full relative">
+    <div class="py-14 border-b-[1px] border-zinc-700">
+        <div class="flex w-full items-center gap-5 md:gap-[3rem] px-4 md:px-14">
+            <div
+                class="relative md:w-[8rem] md:h-[8rem] w-[5rem] h-[5rem] p-3 border-[1px] border-zinc-700 rounded-full overflow-hidden">
+                <img class="h-full w-full object-cover rounded-full" [src]="userService.myProfile()?.user?.avatar"
+                    alt="profile" />
+            </div>
+            <div class="my-2">
+                <div>
+                    <h1 class="text-2xl">@{{ userData.username }}</h1>
+                    <h1 class="text-sm text-zinc-300">{{ userData.email }}</h1>
+                    <p>posts {{ userService.myProfile()?.posts_lenght || 0 }}</p>
+                </div>
+
+                @if (userService.myProfile()?.user?._id === authService.currentUser()?._id) {
+                <div class="mt-4">
+                    <div class="flex flex-wrap gap-2">
+                        <button class="py-1 -ms-1 px-3 my-2 bg-zinc-800 rounded-md font-semibold text-white"
+                            (click)="showModal = true">
+                            Edit Profile
+                        </button>
+                        <a routerLink="/change-password"
+                            class="py-1 px-3 my-2 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 rounded-md font-semibold text-white">
+                            Change Password
+                        </a>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h1 class="text-2xl m-5 flex md:justify-center">Blogs</h1>
+        @if (userBlogs.length !== 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 w-full my-10 px-4 md:px-14">
+            @for (item of userBlogs; track item._id) {
+            <app-blog-card [blog]="item"></app-blog-card>
+            }
+        </div>
+        } @else {
+        <div class="flex h-64 justify-center items-center">
+            <h1 class="text-2xl">Create your blog</h1>
+        </div>
+        }
+    </div>
+
+    <!-- Edit Profile Modal -->
+    @if (showModal) {
+    <div class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-zinc-800 bg-opacity-85 z-50">
+        <div class="bg-zinc-900 p-8 rounded-lg w-full max-w-md mx-4 text-white">
+            <h2 class="text-xl mb-4">Edit Profile</h2>
+            <form (ngSubmit)="handleSubmit()">
+                <input type="text" [(ngModel)]="userData.username" name="username" placeholder="Enter username"
+                    class="rounded-xl p-2 mb-4 w-full placeholder:text-zinc-500 bg-zinc-800 outline-none" />
+                <input type="email" [(ngModel)]="userData.email" name="email" placeholder="Enter email"
+                    class="rounded-xl p-2 mb-4 w-full placeholder:text-zinc-500 bg-zinc-800 outline-none" />
+
+                <input hidden #imageRef type="file" name="avatar" (change)="handleAvatarChange($event)" />
+                <div class="rounded-xl text-zinc-400 border-2 mb-3 border-zinc-800 p-2 flex items-center gap-2 cursor-pointer"
+                    (click)="imageRef.click()">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em"
+                        width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0zm-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0z">
+                        </path>
+                    </svg>
+                    Update Profile Pic
+                </div>
+
+                <div class="flex gap-2 justify-end mt-4">
+                    <button
+                        class="px-4 rounded-full py-2 bg-zinc-800 text-white hover:bg-zinc-700 text-md font-semibold"
+                        type="button" (click)="showModal = false">
+                        Cancel
+                    </button>
+                    <button
+                        class="px-4 rounded-full py-2 bg-blue-500 text-white hover:bg-blue-600 text-md font-semibold"
+                        type="submit">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+
+    <div
+        class="h-10 py-2 flex justify-center items-center w-20 bg-zinc-800 hover:bg-zinc-700 cursor-pointer rounded-full fixed right-6 bottom-5 shadow-lg">
+        <a routerLink="/create"
+            class="text-white font-semibold text-xl block w-full h-full text-center flex items-center justify-center">
+            Create
+        </a>
+    </div>
+</div>

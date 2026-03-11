@@ -1,0 +1,40 @@
+<div class="min-h-screen w-full relative">
+    <div class="py-14 border-b-[1px] border-zinc-700">
+        <div class="flex w-full items-center gap-5 md:gap-[3rem] px-4 md:px-14">
+            <div
+                class="relative md:w-[8rem] md:h-[8rem] w-[5rem] h-[5rem] p-3 border-[1px] border-zinc-700 rounded-full overflow-hidden">
+                <img class="h-full w-full object-cover rounded-full" [src]="userService.otherProfile()?.user?.avatar"
+                    alt="profile" />
+            </div>
+            <div class="my-2">
+                <div>
+                    <h1 class="text-2xl">@{{ userService.otherProfile()?.user?.username }}</h1>
+                    <p class="text-sm text-zinc-300">{{ userService.otherProfile()?.user?.email }}</p>
+                    <p>posts {{ userService.otherProfile()?.posts_lenght || 0 }}</p>
+                </div>
+
+                @if (userService.otherProfile()?.user?._id === authService.currentUser()?._id) {
+                <button class="py-1 mt-5 -ms-1 px-3 my-2 bg-zinc-800 rounded-md font-semibold text-white"
+                    routerLink="/profile">
+                    Edit Profile
+                </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h1 class="text-2xl m-5 flex md:justify-center">Blogs</h1>
+        @if (userBlogs.length !== 0) {
+        <div class="flex flex-wrap justify-center gap-10 w-full my-10 px-4 md:px-14">
+            @for (item of userBlogs; track item._id) {
+            <app-blog-card [blog]="item"></app-blog-card>
+            }
+        </div>
+        } @else {
+        <div class="flex h-64 justify-center items-center">
+            <h1 class="text-2xl">NO BLOG HERE</h1>
+        </div>
+        }
+    </div>
+</div>

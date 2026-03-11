@@ -1,0 +1,91 @@
+<section class="space-y-8">
+  <!-- Hero -->
+  <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <div class="space-y-3">
+      <p class="text-xs font-medium uppercase tracking-[0.2em] text-blue-400">
+        Welcome to BlogSphere
+      </p>
+      <h1 class="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-white">
+        Discover stories, ideas & experiences
+      </h1>
+      <p class="text-sm md:text-base text-zinc-400 max-w-xl">
+        Read from the community or share your own blog posts. Search by author and explore fresh perspectives every day.
+      </p>
+      <div class="flex flex-wrap gap-3 pt-2">
+        <a routerLink="/create"
+           class="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-500 transition">
+          Write a blog
+        </a>
+        <a routerLink="/profile"
+           class="inline-flex items-center justify-center rounded-full border border-zinc-700 px-5 py-2 text-sm text-zinc-200 hover:bg-zinc-900 hover:border-zinc-500 transition">
+          View my profile
+        </a>
+      </div>
+    </div>
+
+    <div class="hidden md:block">
+      <div class="relative">
+        <div class="h-32 w-32 rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-400 blur-2xl opacity-40"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="rounded-3xl border border-zinc-800 bg-zinc-900/80 px-6 py-4 shadow-lg shadow-blue-950/40">
+            <p class="text-xs font-medium text-blue-300 mb-1">
+              Live
+            </p>
+            <p class="text-sm text-zinc-100">
+              {{ displayProduct.length || 0 }} blogs published
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search by author -->
+  <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+    <div class="flex-1 flex rounded-full bg-zinc-900 border border-zinc-800/80 focus-within:border-blue-500/60 focus-within:ring-1 focus-within:ring-blue-500/60 transition">
+      <span class="flex items-center pl-4 pr-2 text-zinc-500">
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="18" width="18"
+             xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z">
+          </path>
+        </svg>
+      </span>
+      <input
+        class="flex-1 bg-transparent text-sm md:text-base text-zinc-200 placeholder:text-zinc-500 px-1 pr-4 py-2 outline-none"
+        type="text"
+        name="ownerblog"
+        [(ngModel)]="search"
+        placeholder="Search blogs by author username..."
+      />
+    </div>
+    <button
+      (click)="ownerBlogSearchHandler()"
+      class="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-500 transition"
+    >
+      Search
+    </button>
+  </div>
+
+  <!-- Blog grid -->
+  @if (displayProduct.length !== 0) {
+    <div class="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 pt-4">
+      @for (item of displayProduct; track item._id) {
+        <app-blog-card [blog]="item"></app-blog-card>
+      }
+    </div>
+  } @else {
+    <div class="py-20 flex flex-col items-center justify-center text-center">
+      <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 mb-2">
+        No blogs found
+      </h2>
+      <p class="text-sm md:text-base text-zinc-400 mb-4">
+        Try searching with a different author or create your first blog post.
+      </p>
+      <a routerLink="/create"
+         class="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-500 transition">
+        Create your first blog
+      </a>
+    </div>
+  }
+</section>

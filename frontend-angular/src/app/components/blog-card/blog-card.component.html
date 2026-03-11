@@ -1,0 +1,65 @@
+<article
+  class="group mx-auto max-w-md h-full rounded-3xl border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-900/90 hover:border-zinc-700 transition overflow-hidden shadow-sm hover:shadow-lg hover:shadow-blue-950/40 flex flex-col"
+>
+  <a [routerLink]="['/blog-details', blog?._id]" class="flex flex-col h-full">
+    <div class="relative h-52 md:h-56 overflow-hidden">
+      <img
+        class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        [src]="blog?.image"
+        alt="Blog cover"
+      />
+      <div class="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent opacity-80"></div>
+
+      <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <img
+            class="h-9 w-9 border border-zinc-700 p-[2px] rounded-full object-cover bg-zinc-900/80"
+            [src]="blog?.owner?.avatar"
+            [alt]="blog?._id"
+          />
+          <div class="leading-tight">
+            <p class="text-xs font-medium text-zinc-100">
+              {{ blog?.owner?.username }}
+            </p>
+            <p class="text-[11px] text-zinc-400">
+              {{ blog?.formattedTimeAgo }}
+            </p>
+          </div>
+        </div>
+        <span class="inline-flex items-center rounded-full bg-zinc-900/80 px-3 py-1 text-[11px] font-medium text-zinc-300 border border-zinc-700/70">
+          Blog
+        </span>
+      </div>
+    </div>
+
+    <div class="flex-1 flex flex-col p-4">
+      <h2 class="text-lg md:text-xl font-semibold tracking-tight text-white line-clamp-2 group-hover:text-blue-400 transition-colors">
+        {{ blog?.title }}
+      </h2>
+      <p
+        class="mt-2 text-sm text-zinc-300/90 line-clamp-3 prose prose-invert prose-sm max-w-none"
+        [innerHTML]="blog?.description"
+      ></p>
+
+      <div class="mt-4 flex items-center justify-between text-xs text-zinc-500">
+        <span>
+          Read more
+        </span>
+        <svg
+          class="transition-transform duration-300 group-hover:translate-x-1"
+          stroke="currentColor"
+          fill="currentColor"
+          stroke-width="0"
+          viewBox="0 0 256 256"
+          height="16"
+          width="16"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M224.48535,119.51465l-40-40a12.0001,12.0001,0,0,0-16.9707,16.9707L187.0293,116H40a12,12,0,0,0,0,24H187.0293l-19.51465,19.51465a12.0001,12.0001,0,0,0,16.9707,16.9707l40-40A12.00066,12.00066,0,0,0,224.48535,119.51465Z">
+          </path>
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>

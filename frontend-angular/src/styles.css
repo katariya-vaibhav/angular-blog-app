@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss";
+
+/* Quill Editor Themes */
+@import 'quill/dist/quill.snow.css';
+@import 'quill/dist/quill.bubble.css';
+
+/* Editor container ne thodu maintain karva mate */
+.ql-container {
+  font-size: 16px;
+  min-height: 200px;
+}

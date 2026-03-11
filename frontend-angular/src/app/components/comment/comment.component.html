@@ -1,0 +1,72 @@
+<div class="h-auto">
+    <h1 class="text-2xl font-semibold px-2">Comments ({{ comments.length }})</h1>
+    <div class="border-[1px] mb-5 border-zinc-700 m-2 p-2 flex rounded-lg gap-2">
+        <textarea [(ngModel)]="commentValue"
+            class="w-[90%] md:w-[90%] text-sm flex px-3 md:pt-2 outline-none rounded-lg resize-none text-zinc-300 bg-zinc-800"
+            placeholder="Write your thought..."></textarea>
+        <button (click)="submitCommentHandler()"
+            class="bg-blue-500 md:w-[10%] text-2xl flex items-center justify-center rounded-lg py-2 px-3">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                </path>
+            </svg>
+        </button>
+    </div>
+
+    @for (comment of comments; track comment._id) {
+    <div class="py-2 px-2 border-[1px] border-zinc-700 rounded-lg m-2">
+        <div class="flex items-center justify-between">
+            <div class="flex gap-2 md:gap-3 items-center">
+                <img class="h-8 w-8 md:h-10 md:w-10 object-cover p-[2px] border-[1px] border-zinc-700 rounded-full"
+                    [src]="comment.owner.avatar" [alt]="comment._id" />
+                <h2 class="text-xs md:text-sm text-zinc-200">
+                    {{ comment.owner.username }}
+                </h2>
+            </div>
+            <p class="text-end text-xs md:text-sm text-zinc-400">
+                {{ comment.createdAt | date:'medium' }}
+            </p>
+        </div>
+        @if (editingCommentId === comment._id) {
+        <div class="ps-9 md:ps-[3.5rem] mt-2">
+            <textarea [(ngModel)]="editValue"
+                class="w-full text-sm px-3 py-2 outline-none rounded-lg resize-none text-zinc-300 bg-zinc-800 border border-zinc-700"
+                rows="3"></textarea>
+            <div class="flex justify-end gap-2 mt-2">
+                <button (click)="cancelEdit()"
+                    class="px-3 py-1 rounded-full border border-zinc-700 text-zinc-200 hover:bg-zinc-800">
+                    Cancel
+                </button>
+                <button (click)="saveEdit(comment._id)"
+                    class="px-3 py-1 rounded-full bg-blue-600 text-white hover:bg-blue-500">
+                    Save
+                </button>
+            </div>
+        </div>
+        } @else {
+        <h2 class="ps-9 md:ps-[3.5rem]">{{ comment.content }}</h2>
+        }
+        <div class="flex justify-end">
+            @if (authService.currentUser()?._id === comment.owner._id) {
+            <div class="flex gap-2">
+                <button (click)="startEdit(comment)"
+                    class="py-[5px] px-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-white">
+                    Edit
+                </button>
+                <button (click)="commentDeleteHandler(comment._id)"
+                    class="py-[5px] px-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-white">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em"
+                        width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            }
+        </div>
+    </div>
+    }
+</div>

@@ -1,0 +1,45 @@
+<div class="h-screen w-full text-white flex flex-col justify-center items-center">
+    <form (ngSubmit)="submitHandler()" class="border-[1px] w-full md:w-1/2 border-zinc-800 md:p-10 rounded-lg p-1">
+        <h2 class="text-center mb-3 text-2xl text-zinc-600">Sign up</h2>
+        <div>
+            <input
+                class="w-full focus:bg-zinc-800 px-3 py-2 placeholder:text-lg my-3 rounded-lg bg-zinc-800 outline-none"
+                type="text" name="username" placeholder="Name" [(ngModel)]="data.username" required />
+        </div>
+        <div>
+            <input
+                class="w-full px-3 focus:bg-zinc-800 py-2 placeholder:text-lg my-3 rounded-lg bg-zinc-800 outline-none"
+                type="email" name="email" placeholder="Email" [(ngModel)]="data.email" required />
+        </div>
+        <div>
+            <input
+                class="w-full focus:bg-zinc-800 px-3 py-2 placeholder:text-lg my-3 rounded-lg bg-zinc-800 outline-none"
+                type="password" placeholder="Password" name="password" [(ngModel)]="data.password" required />
+        </div>
+        <div>
+            <input hidden #imageRef class="ms-4" type="file" name="avatar" (change)="handleFileChange($event)" />
+            <div class="text-zinc-400 border-2 my-2 border-zinc-800 p-2 flex items-center gap-2 cursor-pointer"
+                (click)="imageRef.click()">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em"
+                    width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0zm-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0z">
+                    </path>
+                </svg>
+                Upload Profile Pic
+            </div>
+        </div>
+        <button type="submit" [disabled]="isLoading"
+            class="py-2 w-full px-3 rounded-lg text-md mt-5 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
+            <span *ngIf="isLoading"
+                class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            {{ isLoading ? 'Loading...' : 'Submit' }}
+        </button>
+        <p class="my-2 text-center">
+            Already a user?
+            <a routerLink="/login" class="text-blue-500 underline">
+                Login
+            </a>
+        </p>
+    </form>
+</div>

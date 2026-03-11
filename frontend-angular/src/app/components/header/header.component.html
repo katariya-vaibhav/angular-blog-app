@@ -1,0 +1,73 @@
+<header class="border-b border-zinc-800/70 bg-zinc-950/70 backdrop-blur">
+  <nav class="max-w-6xl mx-auto flex items-center justify-between gap-6 px-4 md:px-6 py-4">
+    <!-- Left: logo + brand -->
+    <div class="flex items-center gap-3">
+      <button
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800 transition"
+        routerLink="/"
+      >
+        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"
+             height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+          </path>
+        </svg>
+      </button>
+
+      <div class="flex items-center gap-2">
+        <img class="h-8 w-8 rounded-lg object-contain" src="/logo.png" alt="logo" />
+        <div class="leading-tight">
+          <p class="text-sm font-semibold text-white tracking-wide">
+            BlogSphere
+          </p>
+          <p class="text-xs text-zinc-400">
+            Share your stories with the world
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: main nav -->
+    <div class="hidden md:flex items-center gap-5 text-sm text-zinc-400">
+      <a routerLink="/" routerLinkActive="text-white"
+         class="hover:text-white transition-colors">
+        Home
+      </a>
+      <a routerLink="/create" routerLinkActive="text-white"
+         class="hover:text-white transition-colors">
+        New Post
+      </a>
+      <a routerLink="/profile" routerLinkActive="text-white"
+         class="hover:text-white transition-colors">
+        My Profile
+      </a>
+    </div>
+
+    <!-- Right: auth actions -->
+    <div class="flex items-center gap-3">
+      <a *ngIf="!authService.currentUser()" routerLink="/login"
+         class="hidden sm:inline-flex items-center justify-center rounded-full border border-zinc-700 px-4 py-1.5 text-sm text-zinc-200 hover:bg-zinc-800 hover:border-zinc-500 transition">
+        Sign in
+      </a>
+
+      <a *ngIf="!authService.currentUser()" routerLink="/sign-up"
+         class="inline-flex items-center justify-center rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-500 transition">
+        Get started
+      </a>
+
+      <button
+        *ngIf="authService.currentUser()"
+        (click)="signOutHandler()"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-red-500/70 text-red-400 hover:bg-red-600/10 hover:text-red-300 transition"
+        title="Sign out"
+      >
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 256 256" height="18" width="18"
+             xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M116,216a12,12,0,0,1-12,12H48a20.02229,20.02229,0,0,1-20-20V48A20.02229,20.02229,0,0,1,48,28h56a12,12,0,0,1,0,24H52V204h52A12,12,0,0,1,116,216Zm108.48535-96.48535-40-40a12.0001,12.0001,0,0,0-16.9707,16.9707L187.0293,116H104a12,12,0,0,0,0,24h83.0293l-19.51465,19.51465a12.0001,12.0001,0,0,0,16.9707,16.9707l40-40A12.0001,12.0001,0,0,0,224.48535,119.51465Z">
+          </path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
