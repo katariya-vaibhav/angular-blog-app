@@ -33,13 +33,13 @@ export class BlogService {
   }
 
   updateBlog(id: string, formData: FormData): Observable<any> {
-    return this.http.put<any>(`/api/v2/Blog/update-blog/${id}`, formData, { withCredentials: true }).pipe(
+    return this.http.put<any>(`/api/v2/Blog/update/${id}`, formData, { withCredentials: true }).pipe(
       tap(() => this.triggerRefresh())
     );
   }
 
   deleteBlog(id: string): Observable<any> {
-    return this.http.delete<any>(`/api/v2/Blog/delete-blog/${id}`, { withCredentials: true }).pipe(
+    return this.http.delete<any>(`/api/v2/Blog/delete/${id}`, { withCredentials: true }).pipe(
       tap(() => this.triggerRefresh())
     );
   }
